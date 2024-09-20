@@ -1,5 +1,5 @@
-module.exports = async ({github, context}) => {
-    const image = `${context.repo.owner.login}/${process.env.IMAGE_NAME}`;
+module.exports = async ({github, context, image_name}) => {
+    const image = `${context.repo.owner.login}/${image_name}`;
     const tags = await github.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
       package_type: 'container',
       username: context.repo.owner,
