@@ -1,0 +1,28 @@
+name: Cleanup Docker Image Tags
+
+env:
+  IMAGE_NAME: dind-demo
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  push:
+    branches:
+      - main         # Also run on pushes to main
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write 
+
+    steps:
+        -   name: Use common steps
+            id: common
+            uses: ./.github/workflows/common.yml
+
+        -   name: Cleanup old image tags
+            uses: actions/github-script@v6
+            with:
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+                script-path: .github/scripts/cleanup_artifacts.js
