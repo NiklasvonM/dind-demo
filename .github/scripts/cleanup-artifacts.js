@@ -21,11 +21,16 @@ module.exports = async ({github, context}) => {
   
         if (daysOld > daysToKeep) {
           console.log(`Deleting tag: ${tag.name}`);
-          await github.rest.packages.deletePackageVersionForAuthenticatedUser({
-            package_type: 'container',
-            package_name: image,
-            package_version_id: tag.id
-          });
+          try {
+            await github.rest.packages.deletePackageVersionForAuthenticatedUser({
+              package_type: 'container',
+              package_name: image,
+              package_version_id: tag.id
+            });
+          } catch (error) {
+            console.log(`Failed to delete tag: ${tag.name}`);
+            console.log(error);
+          }
         }
       }
     }
