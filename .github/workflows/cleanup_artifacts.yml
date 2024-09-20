@@ -17,6 +17,9 @@ jobs:
       packages: write 
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Use common steps
         id: common
         uses: ./.github/actions/common
