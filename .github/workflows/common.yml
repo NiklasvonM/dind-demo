@@ -17,6 +17,9 @@ jobs:
       owner_lowercase: ${{ steps.lowercase_owner.outputs.owner_lowercase }}
 
     steps:
+      -   name: Checkout code
+          uses: actions/checkout@v3
+
       - name: Convert repository owner to lowercase
         id: lowercase_owner
         run: |
