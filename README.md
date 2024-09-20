@@ -8,7 +8,8 @@ This is a basic demonstration of using Docker-in-Docker (dind) to build a simple
 - The GitHub Actions workflow sets up a Docker Buildx environment and builds the image using the `Dockerfile`.
 - The built image is tagged using the commit hash and pushed to the GitHub Container Registry.
 - A basic test is performed to check if `curl` is available in the image.
-- The image is then tagged with the branch name (ref slug) and pushed again to the registry.
+- The image is then tagged with the branch name and pushed again to the registry.
+- Any commit hash tagged images are deleted from the registry.
 
 ## Configuration
 
