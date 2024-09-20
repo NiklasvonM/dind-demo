@@ -8,7 +8,7 @@ on:
     - cron: '0 0 * * *'  # Run daily at midnight
   push:
     branches:
-      - main         # Also run on pushes to main
+      - main
 
 jobs:
   cleanup:
@@ -17,12 +17,12 @@ jobs:
       packages: write 
 
     steps:
-        -   name: Use common steps
-            id: common
-            uses: ./.github/workflows/common.yml
+      - name: Use common steps
+        id: common
+        uses: ./.github/actions/common
 
-        -   name: Cleanup old image tags
-            uses: actions/github-script@v6
-            with:
-                github-token: ${{ secrets.GITHUB_TOKEN }}
-                script-path: .github/scripts/cleanup_artifacts.js
+      - name: Cleanup old image tags
+        uses: actions/github-script@v6
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script-path: .github/scripts/cleanup_artifacts.js

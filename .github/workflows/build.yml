@@ -13,50 +13,50 @@ env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
-    build-and-test:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
-        steps:
-            -   name: Use common steps
-                id: common
-                uses: ./.github/workflows/common.yml
+    steps:
+      - name: Use common steps
+        id: common
+        uses: ./.github/actions/common
 
-            -   name: Set up Docker Buildx
-                uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-            -   name: Extract commit hash
-                id: extract
-                run: |
-                    echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: Extract commit hash
+        id: extract
+        run: |
+          echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-            -   name: Login to GitHub Container Registry
-                uses: docker/login-action@v2
-                with:
-                    registry: ghcr.io
-                    username: ${{ github.repository_owner }}
-                    password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-            -   name: Build and push image with commit hash tag
-                uses: docker/build-push-action@v4
-                with:
-                    context: .
-                    push: true
-                    tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }}
-                    cache-from: type=gha
-                    cache-to: type=gha,mode=max
+      - name: Build and push image with commit hash tag
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-            -   name: Test the image
-                run: |
-                    docker run --rm ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }} curl --version
+      - name: Test the image
+        run: |
+          docker run --rm ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }} curl --version
 
-            -   name: Push image with ref slug tag
-                uses: docker/build-push-action@v4
-                with:
-                    context: .
-                    push: true
-                    tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
-                    cache-from: type=gha
-                    cache-to: type=gha,mode=max
+      - name: Push image with ref slug tag
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
