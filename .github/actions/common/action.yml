@@ -1,0 +1,22 @@
+name: Common Steps
+description: Reusable common steps for workflows
+
+outputs:
+  owner_lowercase:
+    description: 'Repository owner in lowercase'
+    value: ${{ steps.lowercase_owner.outputs.owner_lowercase }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Convert repository owner to lowercase
+      id: lowercase_owner
+      shell: bash
+      run: |
+        owner_lowercase=$(echo '${{ toJSON(github.repository_owner) }}' | tr '[:upper:]' '[:lower:]')
+        # Remove double quotes from the output
+        owner_lowercase=${owner_lowercase//\"}
+        echo "owner_lowercase=$owner_lowercase" >> $GITHUB_OUTPUT
