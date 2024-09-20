@@ -13,7 +13,7 @@ module.exports = async ({github, context}) => {
   
     for (const tag of tags.data) {
       // Is commit hash or starts with "sha"
-      const isCommitHashTag = /^[0-9a-f]{40}$/.test(tag.name) || tag.name.startsWith('sha');
+      const isCommitHashTag = (/^[0-9a-f]{40}$/.test(tag.name) || tag.name.startsWith('sha')) && tag.name != 'main';
   
       if (isCommitHashTag) {
         const createdAt = new Date(tag.created_at);
