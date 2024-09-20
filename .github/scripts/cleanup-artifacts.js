@@ -23,7 +23,6 @@ module.exports = async ({github, context}) => {
           console.log(`Deleting tag: ${tag.name}`);
           await github.rest.packages.deletePackageVersionForAuthenticatedUser({
             package_type: 'container',
-            username: context.repo.owner,
             package_name: image,
             package_version_id: tag.id
           });
