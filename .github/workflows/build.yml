@@ -70,6 +70,5 @@ jobs:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
         with:
           script: |
-            console.log(`${process.env.IMAGE_NAME}`)
             const script = require('.github/scripts/cleanup-artifacts.js')
             console.log(script({github, context}))
