@@ -36,7 +36,9 @@ jobs:
         id: lowercase_owner
         run: |
           owner_lowercase=$(echo '${{ toJSON(github.repository_owner) }}' | tr '[:upper:]' '[:lower:]')
-          echo "owner_lowercase=${owner_lowercase}" >> $GITHUB_OUTPUT
+          # Remove double quotes from the output
+          owner_lowercase=${owner_lowercase//\"}
+          echo "owner_lowercase=$owner_lowercase" >> $GITHUB_OUTPUT
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
