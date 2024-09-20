@@ -1,5 +1,6 @@
 module.exports = async ({github, context}) => {
     const image = `${context.repo.owner}/${process.env.IMAGE_NAME}`;
+    console.log(`Cleaning up old tags for image: ${image}`);
     const tags = await github.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
       package_type: 'container',
       username: context.repo.owner,
