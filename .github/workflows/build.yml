@@ -32,6 +32,12 @@ jobs:
           echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "ref_slug=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
+      - name: Convert repository owner to lowercase
+        id: lowercase_owner
+        run: |
+          owner_lowercase=$(echo '${{ toJSON(github.repository_owner) }}' | tr '[:upper:]' '[:lower:]')
+          echo "owner_lowercase=${owner_lowercase}" >> $GITHUB_OUTPUT
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -44,19 +50,19 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }}
+          tags: ghcr.io/${{ steps.lowercase_owner.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Test the image
         run: |
-          docker run --rm ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }} curl --version
+          docker run --rm ghcr.io/${{ steps.lowercase_owner.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }} curl --version
 
       - name: Push image with ref slug tag
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.ref_slug }}
+          tags: ghcr.io/${{ steps.lowercase_owner.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.ref_slug }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
