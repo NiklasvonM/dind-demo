@@ -60,14 +60,14 @@ jobs:
         run: |
           docker run --rm ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }} curl --version
 
-      - name: Push image with ref slug tag
+      - name: Push image with branch name tag
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
       - name: Cleanup old image tags
         uses: actions/github-script@v7
