@@ -1,6 +1,8 @@
 # Docker-in-Docker Demo
 
-This is a basic demonstration of using Docker-in-Docker (dind) to build a simple Docker image within a GitHub Actions workflow.
+This repository contains CI/CD-experiments for using Docker-in-Docker (dind) to build a simple Docker image within a GitHub Actions workflow using Buildx.
+
+It should be used with caution.
 
 ## How it works
 
