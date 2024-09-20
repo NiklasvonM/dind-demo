@@ -65,7 +65,8 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Cleanup old image tags
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script-path: .github/scripts/cleanup_artifacts.js
+          script: |
+            const script = require('.github/scripts/cleanup-artifacts.js')
+            console.log(script({github, context}))
