@@ -1,9 +1,6 @@
 name: Common Steps
 
-env:
-  IMAGE_NAME: dind-demo
-
-on:
+on: 
   workflow_call:
     inputs:
       image_name:
@@ -11,14 +8,14 @@ on:
         type: string
 
 jobs:
-  common:
+  main: 
     runs-on: ubuntu-latest
     outputs:
       owner_lowercase: ${{ steps.lowercase_owner.outputs.owner_lowercase }}
 
     steps:
-      -   name: Checkout code
-          uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Convert repository owner to lowercase
         id: lowercase_owner
