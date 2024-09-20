@@ -50,6 +50,8 @@ jobs:
           tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.commit_hash }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            CACHE_BUSTER=${{ github.run_id }}
 
       - name: Test the image
         run: |
