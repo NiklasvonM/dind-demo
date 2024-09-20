@@ -63,3 +63,9 @@ jobs:
           tags: ghcr.io/${{ steps.common.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Cleanup old image tags
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script-path: .github/scripts/cleanup_artifacts.js
