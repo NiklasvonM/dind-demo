@@ -30,7 +30,6 @@ jobs:
         id: extract
         run: |
           echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "ref_slug=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Convert repository owner to lowercase
         id: lowercase_owner
@@ -39,6 +38,13 @@ jobs:
           # Remove double quotes from the output
           owner_lowercase=${owner_lowercase//\"}
           echo "owner_lowercase=$owner_lowercase" >> $GITHUB_OUTPUT
+
+      - name: Sanitize branch name for tag
+        id: sanitize_branch_name
+        run: |
+          branch_name="${{ fromJson(steps.extract.outputs.branch_name) }}"
+          sanitized_branch_name=$(echo "$branch_name" | sed 's/[^a-zA-Z0-9_.-]/_/g')
+          echo "sanitized_branch_name=$sanitized_branch_name" >> $GITHUB_OUTPUT
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -65,6 +71,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ steps.lowercase_owner.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.extract.outputs.ref_slug }}
+          tags: ghcr.io/${{ steps.lowercase_owner.outputs.owner_lowercase }}/${{ env.IMAGE_NAME }}:${{ steps.sanitize_branch_name.outputs.sanitized_branch_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
